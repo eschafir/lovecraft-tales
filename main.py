@@ -18,7 +18,8 @@ from cosyvoice.cli.cosyvoice import CosyVoice3
 MODEL_DIR = os.path.join(ROOT_DIR, "models", "Fun-CosyVoice3-0.5B-2512")
 
 # Initialize model
-cosyvoice = CosyVoice3(MODEL_DIR)
+# fp16 speeds up inference on CUDA GPUs; no-op (stays False) on CPU/MPS
+cosyvoice = CosyVoice3(MODEL_DIR, fp16=torch.cuda.is_available())
 
 # Used to auto-transcribe the reference audio sample
 whisper_model = whisper.load_model("base")
