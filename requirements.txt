@@ -1,5 +1,5 @@
 # Core Framework & UI
-gradio==6.26.0
+gradio==6.15.0              # last release compatible with huggingface-hub<1.0 (6.20.0+ requires >=1.x, conflicting with the transformers pin below)
 torch==2.13.0
 torchaudio==2.11.0
 torchcodec==0.16.0          # required by torchaudio.load() on torchaudio>=2.9; needs FFmpeg's shared libs inside this env, e.g. `conda install -c conda-forge ffmpeg=7`
@@ -19,7 +19,7 @@ setuptools<81               # pyworld imports pkg_resources at runtime, which se
 
 # CosyVoice / Matcha-TTS runtime deps
 conformer==0.3.2
-diffusers==0.40.0
+diffusers==0.39.0           # last release compatible with huggingface-hub<1.0 (0.40.0+ requires >=1.23.0, same conflict as gradio above)
 lightning==2.6.5
 unidecode==1.4.0
 gdown==6.1.0
@@ -44,4 +44,4 @@ rich==15.0.0
 
 # Runtime (CPU/CoreML for macOS)
 onnx==1.22.0
-onnxruntime==1.23.2
+onnxruntime-gpu==1.23.2
