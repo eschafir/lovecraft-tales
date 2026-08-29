@@ -54,12 +54,16 @@ _cosyvoice_model = None
 _cached_transcript = None
 
 TALES_DIR = os.path.join(ROOT_DIR, "tales")
-RESULTS_DIR = os.path.join(ROOT_DIR, "results")
-IMAGE_OUTPUT_DIR = os.path.join(ROOT_DIR, "z_image_gradio_output")
+RESULTS_DIR = os.path.join(ROOT_DIR, "Results")
+AUDIO_OUTPUT_DIR = os.path.join(RESULTS_DIR, "Audio")
+IMAGE_OUTPUT_DIR = os.path.join(RESULTS_DIR, "Images")
+SYNOPSES_DIR = os.path.join(RESULTS_DIR, "synopses")
 VOICE_SAMPLE = os.path.join(ROOT_DIR, "Vincent Price Voice.mp3")
 
 os.makedirs(RESULTS_DIR, exist_ok=True)
+os.makedirs(AUDIO_OUTPUT_DIR, exist_ok=True)
 os.makedirs(IMAGE_OUTPUT_DIR, exist_ok=True)
+os.makedirs(SYNOPSES_DIR, exist_ok=True)
 
 
 def get_cosyvoice_model(log_callback=print):
@@ -224,15 +228,16 @@ def stream_tale_audiobook(tale_path: str, log_callback=print):
         yield f"Reference transcript cached: \"{_cached_transcript[:60]}...\"\n", None
 
     tale_name = os.path.splitext(os.path.basename(tale_path))[0]
-    master_file = os.path.join(RESULTS_DIR, f"{tale_name}.wav")
+    tale_audio_dir = os.path.join(AUDIO_OUTPUT_DIR, tale_name)
+    os.makedirs(tale_audio_dir, exist_ok=True)
+    master_file = os.path.join(tale_audio_dir, f"{tale_name}.wav")
 
     # Resumption: if master already exists
     if os.path.exists(master_file):
         yield f"✅ Master audiobook already exists: {master_file} (skipping synthesis)\n", master_file
         return
 
-    tale_chunk_dir = os.path.join(RESULTS_DIR, tale_name)
-    os.makedirs(tale_chunk_dir, exist_ok=True)
+    tale_chunk_dir = tale_audio_dir
 
     with open(tale_path, "r", encoding="utf-8") as f:
         md_content = f.read()

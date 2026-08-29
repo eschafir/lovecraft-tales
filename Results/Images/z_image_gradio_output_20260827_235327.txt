@@ -1,9 +1,0 @@
-Prompt: A realistic, high quality pitbull mixed breed dog flying in a Spiderman suite. The suit covers all the body of the dog, and only the head is uncovered. The sky is blue with a few white clouds but the moon is visible.
-Negative Prompt: 
-Aspect Ratio: 16:9
-Use Custom Resolution: True
-Width: 512
-Height: 512
-Inference Steps: 9
-Guidance Scale: 1
-Seed: 42

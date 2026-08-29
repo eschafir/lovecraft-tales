@@ -95,13 +95,20 @@ lovecraft-tales/
 │   ├── at_the_mountains_of_madness.md
 │   └── ...
 │
-├── results/                        # 🎧 Output master audiobooks and chunk WAVs
-│   ├── memory.wav                  # Master audiobook for Memory (2m 54s)
-│   ├── memory_cover.png            # 768x768 Cover Art for Memory
-│   └── memory/                     # Individual chunk WAV files (resumable)
-│
-├── z_image_gradio_output/          # 🖼️ Output generated cover art PNGs
-│   └── memory/                     # Timestamped Z-Image generation artifacts
+├── Results/                        # 🗄️ Organized multimodal artifacts
+│   ├── Audio/                      # 🎧 Master WAVs and chunk WAVs by tale
+│   │   ├── memory/
+│   │   │   ├── memory.wav          # Master audiobook (2m 54s)
+│   │   │   └── part_0000.wav       # Sentence chunk WAVs
+│   │   └── ...
+│   ├── Images/                     # 🖼️ Generated 768x768 cover art by tale
+│   │   ├── memory/
+│   │   │   └── memory_20260829_003405.png
+│   │   └── ...
+│   ├── synopses/                   # 📜 Cached story lore & visual prompts (.json)
+│   │   ├── memory.json
+│   │   └── ...
+│   └── langgraph_dag.png           # 🔮 Compiled LangGraph DAG diagram
 │
 ├── Vincent Price Voice.mp3         # 🗣️ Reference audio for voice cloning
 ├── Vincent Price Voice_transcript.txt  # 📝 Cached reference audio transcript

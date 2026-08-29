@@ -1,7 +1,0 @@
-Prompt: A realistic, high quality pitbull mixed breed dog flying in a Iron Man suite. The suit covers all the body of the dog, and only the head is uncovered.
-Negative Prompt: 
-Aspect Ratio: 16:9
-Use Custom Resolution: True
-Width: 1024
-Height: 768
-Inference Steps: 9

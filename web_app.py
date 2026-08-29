@@ -26,6 +26,7 @@ from fastapi.responses import FileResponse, HTMLResponse, Response, StreamingRes
 from fastapi.staticfiles import StaticFiles
 
 from studio_graph import (
+    AUDIO_OUTPUT_DIR,
     IMAGE_OUTPUT_DIR,
     RESULTS_DIR,
     ROOT_DIR,
@@ -73,12 +74,18 @@ async def list_tales():
             text = fp.read()
         words = len(text.split())
 
-        # Check existing audio
-        audio_file = os.path.join(RESULTS_DIR, f"{basename}.wav")
+        # Check existing audio in Results/Audio/<tale_name>/<tale_name>.wav
+        audio_file = os.path.join(AUDIO_OUTPUT_DIR, basename, f"{basename}.wav")
         has_audio = os.path.exists(audio_file)
-        audio_url = f"/api/audio/{basename}.wav" if has_audio else None
+        if not has_audio:
+            legacy_file = os.path.join(RESULTS_DIR, f"{basename}.wav")
+            if os.path.exists(legacy_file):
+                has_audio = True
+                audio_file = legacy_file
 
-        # Check existing image
+        audio_url = f"/api/audio/{basename}/{basename}.wav" if has_audio else None
+
+        # Check existing image in Results/Images/<tale_name>/*.png
         img_dir = os.path.join(IMAGE_OUTPUT_DIR, basename)
         has_image = False
         image_url = None
@@ -88,12 +95,15 @@ async def list_tales():
                 has_image = True
                 image_url = f"/api/image/{basename}/{os.path.basename(pngs[-1])}"
 
-        # Check memory cover fallback
-        if not has_image and basename == "memory" and os.path.exists(os.path.join(RESULTS_DIR, "memory_cover.png")):
-            has_image = True
-            image_url = "/api/image/memory/cover"
+        # Check example fallback for memory
+        if not has_image and basename == "memory":
+            for cand in [os.path.join(ROOT_DIR, "example", "memory_cover.png"), os.path.join(RESULTS_DIR, "memory_cover.png")]:
+                if os.path.exists(cand):
+                    has_image = True
+                    image_url = "/api/image/memory/cover"
+                    break
 
-        # Check existing saved synopsis
+        # Check existing saved synopsis in Results/synopses/<tale_name>.json
         syn_data = get_saved_synopsis(basename)
         has_synopsis = syn_data is not None and bool(syn_data.get("synopsis"))
         synopsis_text = syn_data.get("synopsis") if has_synopsis else None
@@ -144,20 +154,39 @@ async def update_synopsis(tale_name: str, payload: dict):
     return {"status": "ok", "message": "Synopsis saved successfully"}
 
 
-@app.get("/api/audio/{filename}")
-async def serve_audio(filename: str):
-    audio_path = os.path.join(RESULTS_DIR, filename)
+@app.get("/api/audio/{tale_name}/{filename}")
+async def serve_tale_audio(tale_name: str, filename: str):
+    audio_path = os.path.join(AUDIO_OUTPUT_DIR, tale_name, filename)
+    if not os.path.exists(audio_path):
+        # Fallback to root Results/
+        audio_path = os.path.join(RESULTS_DIR, filename)
     if not os.path.exists(audio_path):
         raise HTTPException(status_code=404, detail="Audio file not found")
     return FileResponse(audio_path, media_type="audio/wav")
 
 
+@app.get("/api/audio/{filename}")
+async def serve_audio_legacy(filename: str):
+    basename = os.path.splitext(filename)[0]
+    path1 = os.path.join(AUDIO_OUTPUT_DIR, basename, filename)
+    if os.path.exists(path1):
+        return FileResponse(path1, media_type="audio/wav")
+    path2 = os.path.join(RESULTS_DIR, filename)
+    if os.path.exists(path2):
+        return FileResponse(path2, media_type="audio/wav")
+    raise HTTPException(status_code=404, detail="Audio file not found")
+
+
 @app.get("/api/image/{tale_name}/{filename}")
 async def serve_image(tale_name: str, filename: str):
-    if filename == "cover" and tale_name == "memory":
-        path = os.path.join(RESULTS_DIR, "memory_cover.png")
-        if os.path.exists(path):
-            return FileResponse(path, media_type="image/png")
+    if filename == "cover":
+        for cand in [
+            os.path.join(IMAGE_OUTPUT_DIR, tale_name, f"{tale_name}_cover.png"),
+            os.path.join(RESULTS_DIR, f"{tale_name}_cover.png"),
+            os.path.join(ROOT_DIR, "example", f"{tale_name}_cover.png"),
+        ]:
+            if os.path.exists(cand):
+                return FileResponse(cand, media_type="image/png")
     image_path = os.path.join(IMAGE_OUTPUT_DIR, tale_name, filename)
     if not os.path.exists(image_path):
         raise HTTPException(status_code=404, detail="Image not found")

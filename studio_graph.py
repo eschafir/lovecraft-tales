@@ -51,14 +51,16 @@ except ImportError:
 
 # Constants & Paths
 TALES_DIR = os.path.join(ROOT_DIR, "tales")
-RESULTS_DIR = os.path.join(ROOT_DIR, "results")
+RESULTS_DIR = os.path.join(ROOT_DIR, "Results")
+AUDIO_OUTPUT_DIR = os.path.join(RESULTS_DIR, "Audio")
+IMAGE_OUTPUT_DIR = os.path.join(RESULTS_DIR, "Images")
 SYNOPSES_DIR = os.path.join(RESULTS_DIR, "synopses")
-IMAGE_OUTPUT_DIR = os.path.join(ROOT_DIR, "z_image_gradio_output")
 VOICE_SAMPLE = os.path.join(ROOT_DIR, "Vincent Price Voice.mp3")
 
 os.makedirs(RESULTS_DIR, exist_ok=True)
-os.makedirs(SYNOPSES_DIR, exist_ok=True)
+os.makedirs(AUDIO_OUTPUT_DIR, exist_ok=True)
 os.makedirs(IMAGE_OUTPUT_DIR, exist_ok=True)
+os.makedirs(SYNOPSES_DIR, exist_ok=True)
 
 _cosyvoice_model = None
 _cached_transcript = None
@@ -393,9 +395,12 @@ def generate_audio_node(state: StudioState, config: Optional[RunnableConfig] = N
         if log_cb:
             log_cb(cached_tr_msg)
         
-    master_wav = os.path.join(RESULTS_DIR, f"{tale_name}.wav")
+    tale_audio_dir = os.path.join(AUDIO_OUTPUT_DIR, tale_name)
+    os.makedirs(tale_audio_dir, exist_ok=True)
+    master_wav = os.path.join(tale_audio_dir, f"{tale_name}.wav")
+    
     if os.path.exists(master_wav):
-        audio_url = f"/api/audio/{tale_name}.wav"
+        audio_url = f"/api/audio/{tale_name}/{tale_name}.wav"
         exists_msg = f"🎙️ Master audiobook already exists ({master_wav}). Loaded from cache."
         logs.append(exists_msg)
         if log_cb:
@@ -409,8 +414,6 @@ def generate_audio_node(state: StudioState, config: Optional[RunnableConfig] = N
             "current_node": "generate_audio",
         }
         
-    tale_chunk_dir = os.path.join(RESULTS_DIR, tale_name)
-    os.makedirs(tale_chunk_dir, exist_ok=True)
     chunks = clean_markdown_for_speech(full_text)
     sample_rate = cosyvoice.sample_rate
     audio_segments = []
@@ -429,7 +432,7 @@ def generate_audio_node(state: StudioState, config: Optional[RunnableConfig] = N
     for idx, chunk_info in enumerate(chunks):
         c_text = chunk_info["text"]
         p_ms = chunk_info["pause_ms"]
-        c_file = os.path.join(tale_chunk_dir, f"part_{idx:04d}.wav")
+        c_file = os.path.join(tale_audio_dir, f"part_{idx:04d}.wav")
         
         t0 = time.time()
         if os.path.exists(c_file) and os.path.getsize(c_file) > 1000:
@@ -475,7 +478,7 @@ def generate_audio_node(state: StudioState, config: Optional[RunnableConfig] = N
         tot_sec = len(master_audio) / sample_rate
         mins = int(tot_sec // 60)
         secs = int(tot_sec % 60)
-        audio_url = f"/api/audio/{tale_name}.wav"
+        audio_url = f"/api/audio/{tale_name}/{tale_name}.wav"
         fin_msg = f"🎙️ Master audiobook completed! ({mins}m {secs}s) -> {master_wav}"
         logs.append(fin_msg)
         if log_cb:

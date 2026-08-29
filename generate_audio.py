@@ -200,14 +200,15 @@ def synthesize_tale(
     Returns path to the generated master audio file.
     """
     tale_name = os.path.splitext(os.path.basename(tale_path))[0]
-    master_file = os.path.join(output_dir, f"{tale_name}.wav")
+    tale_dir = os.path.join(output_dir, tale_name)
+    os.makedirs(tale_dir, exist_ok=True)
+    master_file = os.path.join(tale_dir, f"{tale_name}.wav")
 
     if skip_existing and os.path.exists(master_file):
         print(f"\n[SKIP] Master file already exists: {master_file}")
         return master_file
 
-    tale_chunk_dir = os.path.join(output_dir, tale_name)
-    os.makedirs(tale_chunk_dir, exist_ok=True)
+    tale_chunk_dir = tale_dir
 
     with open(tale_path, "r", encoding="utf-8") as f:
         md_content = f.read()
@@ -303,8 +304,8 @@ def main():
     parser.add_argument(
         "--output-dir",
         type=str,
-        default="results",
-        help="Directory to save generated audiobooks (default: 'results').",
+        default=os.path.join("Results", "Audio"),
+        help="Directory to save generated audiobooks (default: 'Results/Audio').",
     )
     parser.add_argument(
         "--voice-sample",
