@@ -6,7 +6,6 @@ LightX2V/
 # Generated Outputs & Datasets
 Results/
 z_image_gradio_output/
-*.png
 *.mp3
 !Vincent Price Voice.mp3
 

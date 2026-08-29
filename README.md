@@ -16,13 +16,9 @@ Here is an example of the full multimodal pipeline running on Lovecraft's prose 
 | Component | Output & Details |
 | :--- | :--- |
 | **📖 Original Story** | [`tales/memory.md`](tales/memory.md) (1,982 chars, ~390 words) |
-<!-- | **🖼️ Gothic Cover Art** | ![Memory Cover Art](example/memory_cover.png)<br><sub>**Model:** Z-Image-Turbo (int8) • **Resolution:** 768×768 px</sub> |
-| **🎙️ Cloned Audiobook** | 🎧 **Master WAV:** [`results/memory.wav`](example/memory.wav)<br>• **Narrator:** Vincent Price (zero-shot clone via CosyVoice3)<br>• **Duration:** `2m 54s` (24 kHz stereo WAV)<br>• **Structure:** 11 sentence chunks with 350ms sentence pauses & 800ms paragraph pauses | -->
+| **🖼️ Gothic Cover Art** | ![Memory Cover Art](example/memory_cover.png)<br><sub>**Model:** Z-Image-Turbo (int8) • **Resolution:** 768×768 px</sub> |
+| **🎙️ Cloned Audiobook** | 🎧 **Master WAV:** [`results/memory.wav`](example/memory.wav)<br>• **Narrator:** Vincent Price (zero-shot clone via CosyVoice3)<br>• **Duration:** `2m 54s` (24 kHz stereo WAV)<br>• **Structure:** 11 sentence chunks with 350ms sentence pauses & 800ms paragraph pauses |
 | **📜 AI Lore & Synopsis** | *"In the accursed valley of Nis beneath a dying moon, a Genie questions the Daemon of the Valley regarding the ruins of forgotten palaces. The Daemon, who is Memory itself, dimly recalls the extinct builders whose brief existence resembled the flowing river Than, naming them 'Man' before turning to watch a solitary ape in the crumbling courtyard."* |
-
-<video controls src="example/memory_showcase.mp4" title="Title"></video>
-
-[![Listen to Audio](https://img.shields.io/badge/▶_Listen_to_Audiobook-Vincent_Price_(2m_54s)-8b0000?style=for-the-badge&logo=soundcharts&logoColor=white)](example/memory.wav)
 ---
 
 ## 📁 Repository Structure
