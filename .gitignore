@@ -1,4 +1,26 @@
-CosyVoice/
+# Models & Large Checkpoints
 models/
+CosyVoice/
 LightX2V/
+
+# Generated Outputs & Datasets
+results/
+Results/
 z_image_gradio_output/
+*.png
+*.wav
+*.mp3
+!Vincent Price Voice.mp3
+
+# Python & Jupyter Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+scratch/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

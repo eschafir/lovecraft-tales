@@ -5,7 +5,6 @@ from lightx2v import LightX2VPipeline
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_PATH = os.path.join(ROOT_DIR, "z_image_gradio_output")
-os.makedirs(OUTPUT_PATH, exist_ok=True)
 
 ASPECT_RATIOS = ["16:9", "9:16", "1:1", "4:3", "3:4", "3:2", "2:3"]
 
