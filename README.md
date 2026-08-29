@@ -22,7 +22,7 @@ Here is an example of the full multimodal pipeline running on Lovecraft's prose 
 
 <video controls src="example/memory_showcase.mp4" title="Title"></video>
 
-[![Listen to Audio](https://img.shields.io/badge/▶_Listen_to_Audiobook-Vincent_Price_(2m_54s)-8b0000?style=for-the-badge&logo=soundcharts&logoColor=white)](results/memory.wav)
+[![Listen to Audio](https://img.shields.io/badge/▶_Listen_to_Audiobook-Vincent_Price_(2m_54s)-8b0000?style=for-the-badge&logo=soundcharts&logoColor=white)](example/memory.wav)
 ---
 
 ## 📁 Repository Structure
