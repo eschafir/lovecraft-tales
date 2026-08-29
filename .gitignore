@@ -4,13 +4,9 @@ CosyVoice/
 LightX2V/
 
 # Generated Outputs & Datasets
-Results/Audio/
-Results/Images/
-Results/dagon/
-Results/memory/
+Results/
 z_image_gradio_output/
 *.png
-*.wav
 *.mp3
 !Vincent Price Voice.mp3
 
