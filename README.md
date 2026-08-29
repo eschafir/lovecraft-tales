@@ -1,11 +1,58 @@
 # 🌌 H. P. Lovecraft Multimodal Studio
 
 An end-to-end multimodal suite for exploring, illustrating, and listening to the complete fiction of **H. P. Lovecraft**:
+- **🔮 LangGraph Orchestration Engine**: Stateful Directed Acyclic Graph (DAG) managing pipeline flow, conditional branching, checkpointer caching, and real-time intra-node streaming.
 - **68 Tales Collection**: Clean Markdown transcripts scraped from *hplovecraft.com*.
 - **Ollama AI Lore & Synopsis**: Automatic atmospheric summaries and cover art prompts using `gemma4:e2b`.
 - **Gothic Cover Art Generation**: Quantized `Z-Image-Turbo` (int8) diffusion model generating 768×768 cover illustrations.
 - **Vincent Price Audiobook Narration**: Zero-shot voice cloning using `CosyVoice3` with smart zero-overlap sentence chunking and natural pause pacing.
-- **Interactive Web Studio**: Real-time streaming Gradio app with live execution logs.
+- **The Necronomicon Vault Web Studio**: Custom Gothic web app (FastAPI) streaming LangGraph execution with real-time logs via Server-Sent Events (SSE).
+
+---
+
+## 🔮 LangGraph Workflow & DAG Architecture
+
+The entire multimodal pipeline is structured as a stateful graph in [`studio_graph.py`](studio_graph.py):
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([__start__]):::first
+	load_story(1. load_story)
+	generate_lore(2. generate_lore)
+	generate_cover(3. generate_cover)
+	generate_audio(4. generate_audio)
+	__end__([__end__]):::last
+
+	__start__ --> load_story
+	load_story --> generate_lore
+	
+	%% Conditional Routing from Lore Engine
+	generate_lore -.->|If cover art requested| generate_cover
+	generate_lore -.->|If audio only| generate_audio
+	generate_lore -.->|If synopsis only| __end__
+	
+	%% Conditional Routing from Cover Engine
+	generate_cover -.->|If audio requested| generate_audio
+	generate_cover -.->|If complete| __end__
+	
+	generate_audio --> __end__
+
+	classDef default fill:#121920,stroke:#d4af37,stroke-width:1.5px,color:#00ffaa
+	classDef first fill:#093325,stroke:#00ffaa,color:#ffffff
+	classDef last fill:#2b0e14,stroke:#ff4444,color:#ffffff
+```
+
+### Graph Capabilities:
+- **`StudioState` Management**: Keeps state for text chunks, Ollama prompts, generated image paths, audio paths, and log buffers.
+- **Conditional Branching**: Dynamically skips nodes depending on which components are enabled in the UI.
+- **Memory Checkpointing (`MemorySaver`)**: Thread-safe caching and session state tracking.
+- **Real-Time Intra-Node Callbacks**: Streams progress for each diffusion step and audio chunk immediately to the UI via `RunnableConfig` queue dispatchers.
+- **Visual DAG Inspector**: View the live rendered diagram at `http://127.0.0.1:8000/api/graph/dag` or in [`results/langgraph_dag.png`](results/langgraph_dag.png).
 
 ---
 
@@ -25,7 +72,9 @@ Here is an example of the full multimodal pipeline running on Lovecraft's prose 
 
 ```
 lovecraft-tales/
-├── app.py                          # 🌌 Unified Gradio Studio (Main Web App)
+├── studio_graph.py                 # 🔮 LangGraph Stateful Workflow Engine (Nodes & Routing)
+├── web_app.py                      # 🌌 The Necronomicon Vault (FastAPI + LangGraph Web UI)
+├── app.py                          # 🌌 Unified Gradio Studio (Alternative UI)
 ├── generate_audio.py               # 🎙️ Audiobook generation CLI tool (CosyVoice3 + Vincent Price)
 ├── generate_image.py               # 🖼️ Cover art generation CLI tool (Z-Image-Turbo 768x768)
 ├── scrape_tales.py                 # 📜 Scraper for all 68 tales from hplovecraft.com
