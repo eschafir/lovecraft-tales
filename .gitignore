@@ -4,8 +4,10 @@ CosyVoice/
 LightX2V/
 
 # Generated Outputs & Datasets
-results/
-Results/
+Results/Audio/
+Results/Images/
+Results/dagon/
+Results/memory/
 z_image_gradio_output/
 *.png
 *.wav
