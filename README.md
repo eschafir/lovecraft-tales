@@ -29,7 +29,12 @@ graph TD;
 	__end__([__end__]):::last
 
 	__start__ --> load_story
-	load_story --> generate_lore
+	
+	%% Conditional Routing from Load Story
+	load_story -.->|If synopsis requested| generate_lore
+	load_story -.->|If skip synopsis -> cover| generate_cover
+	load_story -.->|If audio only| generate_audio
+	load_story -.->|If none selected| __end__
 	
 	%% Conditional Routing from Lore Engine
 	generate_lore -.->|If cover art requested| generate_cover

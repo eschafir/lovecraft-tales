@@ -494,6 +494,16 @@ def generate_audio_node(state: StudioState, config: Optional[RunnableConfig] = N
 # ==========================================
 # Conditional Routing Logic
 # ==========================================
+def route_after_story(state: StudioState) -> str:
+    if state.get("do_summary"):
+        return "generate_lore"
+    elif state.get("do_image"):
+        return "generate_cover"
+    elif state.get("do_audio"):
+        return "generate_audio"
+    return END
+
+
 def route_after_lore(state: StudioState) -> str:
     if state.get("do_image"):
         return "generate_cover"
@@ -520,7 +530,13 @@ def build_studio_graph():
     builder.add_node("generate_audio", generate_audio_node)
     
     builder.add_edge(START, "load_story")
-    builder.add_edge("load_story", "generate_lore")
+    # builder.add_edge("load_story", "generate_lore")
+    builder.add_conditional_edges("load_story", route_after_story, {
+        "generate_lore": "generate_lore",
+        "generate_cover": "generate_cover",
+        "generate_audio": "generate_audio",
+        END: END,
+    })
     
     # Conditional branching with explicit edge mappings for visualization
     builder.add_conditional_edges(
