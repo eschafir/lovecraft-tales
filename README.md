@@ -68,19 +68,35 @@ lovecraft-tales/
 
 ## 🚀 Quickstart & Usage
 
-### 1. Unified Lovecraft Studio (Web UI)
+### 1. The Necronomicon Vault (Custom Gothic Web App) ⭐
 
-Run the full interactive web application in your `lovecraft` environment:
+Run the custom, immersive Lovecraftian-themed web application:
 
 ```powershell
 # 1. Start Ollama (in a separate terminal)
 ollama serve
 
-# 2. Launch the Studio app
+# 2. Launch the Necronomicon Vault Web App
+conda activate lovecraft
+python web_app.py
+```
+Open **`http://127.0.0.1:8000`** in your browser to experience:
+- **Atmospheric Gothic Aesthetic**: Obsidian & emerald abyssal styling, floating cosmic mist particle canvas, and vintage typography (`Cinzel`, `Crimson Pro`).
+- **The Grimoire**: Interactive searchable catalogue of all 68 Lovecraft fiction stories with instant reader modal.
+- **The Alchemical Studio**: Generate Ollama synopses, 768×768 Z-Image-Turbo cover art, and Vincent Price audiobooks with a single click.
+- **Occult Terminal**: Live streaming execution logs (via Server-Sent Events) showing real-time step and chunk progress.
+
+---
+
+### 2. Gradio Studio (Alternative UI)
+
+You can also run the Gradio interface:
+
+```powershell
 conda activate lovecraft
 python app.py
 ```
-Open **`http://127.0.0.1:7860`** to select any tale, generate a synopsis, paint gothic cover art, and listen to Vincent Price narrate the story with real-time console output.
+Available at **`http://127.0.0.1:7860`**.
 
 ---
 

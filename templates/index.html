@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Necronomicon Vault • H. P. Lovecraft Multimodal Studio</title>
+    <link rel="stylesheet" href="/static/style.css?v=2.2">
+</head>
+<body>
+    <canvas id="mist-canvas"></canvas>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>The Necronomicon Vault</h1>
+            <p class="subtitle">H. P. Lovecraft Multimodal Studio</p>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Sidebar: Grimoire of 68 Tales -->
+            <aside class="card-panel grimoire-panel">
+                <div class="card-title">
+                    <span>The Grimoire</span>
+                </div>
+                <div class="search-wrapper">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search 68 Lovecraft tales...">
+                </div>
+                <div class="tales-list" id="tales-list">
+                    <!-- Dynamic Tale Items -->
+                </div>
+            </aside>
+
+            <!-- Right Content: The Alchemical Studio -->
+            <main class="content-area">
+                <!-- Selected Story Panel -->
+                <div class="card-panel">
+                    <div class="story-header-bar">
+                        <div>
+                            <h2 id="active-tale-title">Select a Tale</h2>
+                            <p class="story-meta" id="active-tale-meta">H. P. Lovecraft</p>
+                        </div>
+                        <button id="btn-read-story" type="button" class="btn-read-modal">📜 Read Original Text</button>
+                    </div>
+
+                    <!-- Pipeline Checkboxes -->
+                    <div class="controls-grid">
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="chk-summary" checked>
+                            <span>1. Lore & Synopsis (Ollama)</span>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="chk-image" checked>
+                            <span>2. Gothic Cover Art (768px)</span>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="chk-audio" checked>
+                            <span>3. Vincent Price Audio</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custom-prompt">🎨 Custom Art Prompt (Optional - leave blank for Ollama auto-prompt):</label>
+                        <input type="text" id="custom-prompt" class="custom-input" placeholder="e.g. Ancient monolith submerged under dark green algae and moonlight...">
+                    </div>
+
+                    <div class="form-group" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <label style="margin-bottom: 0;">Z-Image Steps: <span id="steps-value" style="color: var(--eldritch-green); font-weight: bold;">8</span></label>
+                        <input type="range" id="steps-slider" min="4" max="12" value="8" step="1" style="flex: 1; accent-color: var(--eldritch-green);">
+                    </div>
+
+                    <button id="btn-generate" type="button" class="btn-generate">Awaken the Old Ones</button>
+                </div>
+
+                <!-- Outputs Showcase (Art + Audio + Synopsis) -->
+                <div class="card-panel output-showcase">
+                    <!-- Left: Cover Art Frame -->
+                    <div class="cover-frame-wrapper">
+                        <img id="cover-image" class="cover-image" src="" alt="Cover Art" style="display: none;">
+                        <div id="cover-placeholder" class="cover-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <path d="M21 15l-5-5L5 21"/>
+                            </svg>
+                            <span>Gothic Cover Art</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Audio + Synopsis -->
+                    <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Audio Player -->
+                        <div id="audio-section" class="audio-player-card" style="display: none;">
+                            <div class="audio-header">
+                                <span class="audio-narrator">🎙️ Vincent Price Narration</span>
+                            </div>
+                            <audio id="audio-player" controls preload="metadata"></audio>
+                        </div>
+
+                        <!-- Synopsis Box -->
+                        <div>
+                            <div class="card-title" style="margin-bottom: 10px;">
+                                <span>📜 Story Lore & Synopsis</span>
+                            </div>
+                            <div id="synopsis-content" class="synopsis-box">
+                                <p><em>Select a tale and click "Awaken the Old Ones" to begin.</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Occult Live Console -->
+                <div class="card-panel console-panel">
+                    <div class="card-title">
+                        <span>📟 Occult Terminal & Live Progress</span>
+                    </div>
+                    <pre id="console-logs" class="console-logs">[Occult Terminal Initialized] Ready to stream neural synthesis...</pre>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Story Reader Modal -->
+    <div id="reader-modal" class="modal-backdrop">
+        <div class="reader-modal">
+            <div class="reader-modal-header">
+                <h3 id="reader-modal-title">Story Title</h3>
+                <button id="btn-close-modal" class="btn-close-modal">&times;</button>
+            </div>
+            <div class="reader-modal-body" id="reader-modal-body">
+                <!-- Full Story Markdown Rendered -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=2.2"></script>
+</body>
+</html>
